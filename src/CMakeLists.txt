@@ -250,7 +250,7 @@ endif()
 #-----------------------------------------------------------------------------
 
 message(STATUS "Searching for Eigen3...")
-find_package(Eigen3 3.3.0)
+find_package(Eigen3)
 if(EIGEN3_FOUND)
   message(STATUS "  Eigen3 version: ${EIGEN3_VERSION}")
   message(STATUS "  Eigen3 include directory: ${EIGEN3_INCLUDE_DIR}")

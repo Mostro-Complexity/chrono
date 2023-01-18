@@ -10,13 +10,23 @@
 
 cmake_minimum_required(VERSION 3.10)
 
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
+
+set(PROJECT_TOPLEVEL_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+
+if(MSVC)
+    add_compile_options(${MSVC_COMPILE_OPTIONS})
+endif()
+
+include(vcpkg)
+
 #-----------------------------------------------------------------------------
 # Prevent in-source builds.
 #-----------------------------------------------------------------------------
 
-if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
+if(${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
     message( FATAL_ERROR  "In-source build is not possible and not recommended. Choose an empty directory for build output.")
-endif(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
+endif(${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 
 #-----------------------------------------------------------------------------
 
@@ -69,7 +79,6 @@ message(STATUS "The target processor is ${CMAKE_SYSTEM_PROCESSOR}")
 # Location of additional CMake scripts
 #-----------------------------------------------------------------------------
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/")
 include(GetGitRevisionDescription)
 get_git_head_revision(GIT_REFSPEC VCS_REVISION)
 
@@ -199,8 +208,8 @@ set(CPACK_PACKAGE_INSTALL_DIRECTORY "ChronoEngine")
 set(CPACK_PACKAGE_INSTALL_REGISTRY_KEY "ChronoEngine")
 set(CPACK_PACKAGE_NAME "ChronoEngine")
 set(CPACK_PACKAGE_VENDOR "UWSBEL")
-set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
-set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README.md")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
 #set(CPACK_RESOURCE_FILE_WELCOME "/home/andy/vtk/CMake/Templates/CPack.GenericWelcome.txt")
 set(CPACK_SOURCE_GENERATOR "TGZ")
 #set(CPACK_SOURCE_PACKAGE_FILE_NAME "ChronoEngine")
@@ -233,14 +242,14 @@ endif()
 #------------------------------------------------------------
 
 if(MSVC OR XCODE_VERSION)
-    file(COPY ${CMAKE_SOURCE_DIR}/data/ DESTINATION ${CMAKE_BINARY_DIR}/bin/data/)
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/data/ DESTINATION ${CMAKE_BINARY_DIR}/bin/data/)
 else()
-    file(COPY ${CMAKE_SOURCE_DIR}/data/ DESTINATION ${CMAKE_BINARY_DIR}/data/)
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/data/ DESTINATION ${CMAKE_BINARY_DIR}/data/)
 endif()
 
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/data/ DESTINATION ${CH_INSTALL_DATA})
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/template_project/ DESTINATION ${CH_INSTALL_SAMPLE_PROJ})
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/template_project_vehicle_cosim/ DESTINATION ${CH_INSTALL_SAMPLE_PROJ_COSIM})
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/data/ DESTINATION ${CH_INSTALL_DATA})
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/template_project/ DESTINATION ${CH_INSTALL_SAMPLE_PROJ})
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/template_project_vehicle_cosim/ DESTINATION ${CH_INSTALL_SAMPLE_PROJ_COSIM})
 
 #------------------------------------------------------------
 # Defer configuration of all Chrono libraries and programs
