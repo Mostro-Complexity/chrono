@@ -8,7 +8,7 @@
 # Optionally enable building the various programs
 #-----------------------------------------------------------------------------
 
-option(BUILD_DEMOS "Build demo programs" ON)
+option(BUILD_DEMOS "Build demo programs" OFF)
 option(BUILD_BENCHMARKING "Build benchmark tests" OFF)
 
 #-----------------------------------------------------------------------------
@@ -250,7 +250,7 @@ endif()
 #-----------------------------------------------------------------------------
 
 message(STATUS "Searching for Eigen3...")
-find_package(Eigen3 3.3.0)
+find_package(Eigen3 3.4.0)
 if(EIGEN3_FOUND)
   message(STATUS "  Eigen3 version: ${EIGEN3_VERSION}")
   message(STATUS "  Eigen3 include directory: ${EIGEN3_INCLUDE_DIR}")
@@ -277,15 +277,15 @@ endif()
 # Fix for hang-up in compilation with 32 bit on MSVC in Release configuration with EIGEN3.
 # Note: this flag may DECREASE the overall calculation performance in approx. 10%
 # For more information, see: https://gitlab.com/libeigen/eigen/-/issues/2379
-option(CMAKE_FLAGS_EIGEN3_INLINE "Build with 32 bit on MSVC in release configuration" OFF)
+set(CMAKE_FLAGS_EIGEN3_INLINE CACHE BOOL "Build with 32 bit on MSVC in release configuration" $<AND:$<CONFIG:Release>,$<PLATFORM_ID:x86>>)
 mark_as_advanced(FORCE CMAKE_FLAGS_EIGEN3_INLINE)
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 	if(MSVC AND ("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32") AND CMAKE_FLAGS_EIGEN3_INLINE)
-     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /DEIGEN_STRONG_INLINE=inline")
-     set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /DEIGEN_STRONG_INLINE=inline")
-	 message(STATUS "Enabling inline flag for EIGEN hang-up issues with 32 bit on MSVC in release configuration")
-	 message(STATUS " Compiler flag: -DEIGEN_STRONG_INLINE=inline")
-	 message(STATUS " Note: this flag may DECREASE the overall calculation performance in approx. 10%")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /DEIGEN_STRONG_INLINE=inline")
+    set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /DEIGEN_STRONG_INLINE=inline")
+    message(STATUS "Enabling inline flag for EIGEN hang-up issues with 32 bit on MSVC in release configuration")
+    message(STATUS " Compiler flag: -DEIGEN_STRONG_INLINE=inline")
+    message(STATUS " Note: this flag may DECREASE the overall calculation performance in approx. 10%")
 	endif()
 endif()
 #-----------------------------------------------------------------------------
