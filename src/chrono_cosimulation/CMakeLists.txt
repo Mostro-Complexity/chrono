@@ -30,7 +30,7 @@ source_group("" FILES
 
 # Add the COSIMULATION library
 
-add_library(ChronoEngine_cosimulation SHARED
+add_library(ChronoEngine_cosimulation
             ${ChronoEngine_COSIMULATION_SOURCES}
             ${ChronoEngine_COSIMULATION_HEADERS})
 

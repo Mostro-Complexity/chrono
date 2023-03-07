@@ -75,7 +75,7 @@ source_group(""  FILES  ${ChronoEngine_PYPARSER_SOURCES} ${ChronoEngine_PYPARSER
 
 include_directories(${CH_PYTHONINC})
 
-add_library(ChronoEngine_pyparser SHARED
+add_library(ChronoEngine_pyparser 
             ${ChronoEngine_PYPARSER_SOURCES}
             ${ChronoEngine_PYPARSER_HEADERS})
 

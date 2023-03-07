@@ -10,6 +10,7 @@
 
 option(BUILD_DEMOS "Build demo programs" ON)
 option(BUILD_BENCHMARKING "Build benchmark tests" OFF)
+option(BUILD_SHARED_LIBS "Build shared libs" ON)
 
 #-----------------------------------------------------------------------------
 # Search prefixes specified by <PackageName>_ROOT

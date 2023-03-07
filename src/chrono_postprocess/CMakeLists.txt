@@ -37,7 +37,7 @@ SOURCE_GROUP("" FILES
 # The POSTPROCESS library is added to the project,
 # and some custom properties of this target are set.
 
-ADD_LIBRARY(ChronoEngine_postprocess SHARED 
+ADD_LIBRARY(ChronoEngine_postprocess 
 			${ChronoEngine_POSTPROCESS_SOURCES}
 			${ChronoEngine_POSTPROCESS_HEADERS})
 

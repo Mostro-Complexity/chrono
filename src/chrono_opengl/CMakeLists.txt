@@ -262,7 +262,7 @@ SOURCE_GROUP("utils" FILES ${CE_OpenGL_STB_FILES} ${CE_OpenGL_TINYOBJLOADER_FILE
 # Add the ChronoEngine_opengl library
 # ------------------------------------------------------------------------------
 
-ADD_LIBRARY(ChronoEngine_opengl SHARED 
+ADD_LIBRARY(ChronoEngine_opengl  
   ${CE_OpenGL_BASE_FILES}
   ${CE_OpenGL_CORE_FILES}
   ${CE_OpenGL_SHAPES_FILES}

@@ -161,7 +161,7 @@ source_group("terrain" FILES ${CV_COSIM_TERRAIN_FILES})
 
 message(STATUS "Add ChronoEngine_vehicle_cosim library")
 
-add_library(ChronoEngine_vehicle_cosim SHARED
+add_library(ChronoEngine_vehicle_cosim 
     ${CV_COSIM_FILES}
     ${CV_COSIM_MBS_FILES}
     ${CV_COSIM_TIRE_FILES}

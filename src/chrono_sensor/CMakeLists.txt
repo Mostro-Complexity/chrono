@@ -487,7 +487,7 @@ IF(USE_TENSOR_RT)
     list(APPEND ALL_CH_SENSOR_FILES ${ChronoEngine_sensor_TENSORRT_HEADERS})
 ENDIF()
 
-cuda_add_library(ChronoEngine_sensor SHARED
+cuda_add_library(ChronoEngine_sensor 
     ${ALL_CH_SENSOR_FILES}
 )
 

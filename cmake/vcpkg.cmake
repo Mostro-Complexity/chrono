@@ -2,7 +2,7 @@ include(FetchContent)
 
 set(USE_VCPKG_AS_SUBMODULE ON CACHE BOOL "Whether to use vcpkg as a submodule")
 set(vcpkg_ROOT_DIR ${CMAKE_SOURCE_DIR}/third_party/vcpkg)
-set(vcpkg_TAG 2022.10.19)
+set(vcpkg_TAG 2023.02.24)
 get_filename_component(
     VCPKG_INSTALL_BINARY_SOURCE_DIR "${PROJECT_TOPLEVEL_DIR}/vcpkg_binary_source" REALPATH
 )

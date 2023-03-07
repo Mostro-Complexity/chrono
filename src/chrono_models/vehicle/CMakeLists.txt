@@ -629,7 +629,7 @@ source_group("kraz" FILES ${CVM_KRAZ_FILES})
 set(CXX_FLAGS ${CH_CXX_FLAGS})
 set(LIBRARIES ChronoEngine ChronoEngine_vehicle)
 
-add_library(ChronoModels_vehicle SHARED
+add_library(ChronoModels_vehicle
     ${CVM_COMMON_FILES}
     ${CVM_HMMWV_FILES}
     ${CVM_FEDA_FILES}
