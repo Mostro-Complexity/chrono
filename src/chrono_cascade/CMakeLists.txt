@@ -95,7 +95,7 @@ if(ENABLE_MODULE_IRRLICHT)
     include_directories(${CH_IRRLICHTINC})
 endif()
 
-add_library(ChronoEngine_cascade SHARED 
+add_library(ChronoEngine_cascade 
             ${ChronoEngine_CASCADE_SOURCES}
             ${ChronoEngine_CASCADE_HEADERS}
             ${ChronoEngine_CASCADE_HEADERS_IRRLICHT})

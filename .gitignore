@@ -106,3 +106,5 @@ src/chrono_granular/DoxyGenDocs/
 
 third_party
 out
+
+vcpkg_binary_source

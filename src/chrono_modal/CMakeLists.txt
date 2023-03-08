@@ -56,7 +56,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /bigobj")
 endif()
 
-ADD_LIBRARY(ChronoEngine_modal SHARED 
+ADD_LIBRARY(ChronoEngine_modal 
 			${ChronoEngine_MODAL_SOURCES}
 			${ChronoEngine_MODAL_HEADERS})
 

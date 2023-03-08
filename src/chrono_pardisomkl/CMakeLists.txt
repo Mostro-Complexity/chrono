@@ -83,7 +83,7 @@ source_group("" FILES ${ChronoEngine_PardisoMKL_HEADERS} ${ChronoEngine_PardisoM
 # Add the ChronoEngine_pardisomkl library
 # ------------------------------------------------------------------------------
 
-add_library(ChronoEngine_pardisomkl SHARED
+add_library(ChronoEngine_pardisomkl
             ${ChronoEngine_PardisoMKL_SOURCES}
             ${ChronoEngine_PardisoMKL_HEADERS})
 

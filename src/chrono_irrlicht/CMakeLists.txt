@@ -129,7 +129,7 @@ if (ENABLE_MODULE_MODAL)
     set(LIBRARIES ${LIBRARIES} ChronoEngine_modal)
 endif()
 
-ADD_LIBRARY(ChronoEngine_irrlicht SHARED
+ADD_LIBRARY(ChronoEngine_irrlicht
   ${ChronoEngine_IRRLICHT_SOURCES}
   ${ChronoEngine_IRRLICHT_HEADERS}
 )

@@ -158,7 +158,7 @@ source_group("" FILES ${ChronoEngine_MUMPS_HEADERS} ${ChronoEngine_MUMPS_SOURCES
 
 add_definitions("-D_OPENMP_NOFORCE_MANIFEST")
 
-add_library(ChronoEngine_mumps SHARED ${ChronoEngine_MUMPS_SOURCES} ${ChronoEngine_MUMPS_HEADERS})
+add_library(ChronoEngine_mumps ${ChronoEngine_MUMPS_SOURCES} ${ChronoEngine_MUMPS_HEADERS})
 
 set_target_properties(ChronoEngine_mumps PROPERTIES
                       COMPILE_FLAGS "${CH_CXX_FLAGS} ${CH_MUMPS_COMPILE_FLAGS}"

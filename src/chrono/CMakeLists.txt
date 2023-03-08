@@ -1403,7 +1403,7 @@ else()
 endif()
 
 # Add the ChronoEngine library to the project
-add_library(ChronoEngine SHARED ${ChronoEngine_FILES})
+add_library(ChronoEngine ${ChronoEngine_FILES})
 
 target_link_libraries(ChronoEngine ${OPENMP_LIBRARIES} ${CH_SOCKET_LIB})
 if (UNIX)

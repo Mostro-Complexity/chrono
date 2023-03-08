@@ -63,7 +63,7 @@ SET (CH_MATLABLIB "${CH_MATLABLIB}" PARENT_SCOPE )
 
 INCLUDE_DIRECTORIES(${MATLAB_SDK_ROOT}/include)
 
-ADD_LIBRARY(ChronoEngine_matlab SHARED 
+ADD_LIBRARY(ChronoEngine_matlab 
             ${ChronoEngine_MATLAB_SOURCES}
             ${ChronoEngine_MATLAB_HEADERS})
             

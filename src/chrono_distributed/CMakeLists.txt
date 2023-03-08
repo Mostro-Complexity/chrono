@@ -122,7 +122,7 @@ SOURCE_GROUP(solver FILES ${ChronoEngine_distributed_SOLVER})
 include_directories(${CH_MULTICORE_INCLUDES})
 include_directories(${CH_DISTRIBUTED_INCLUDES})
 
-ADD_LIBRARY(ChronoEngine_distributed SHARED
+ADD_LIBRARY(ChronoEngine_distributed
 			${ChronoEngine_distributed_BASE}
 			${ChronoEngine_distributed_PHYSICS}
 			${ChronoEngine_distributed_COLLISION}

@@ -148,7 +148,7 @@ source_group(utilities FILES ${ChronoEngine_GPU_VISUALIZATION})
 # Add the ChronoEngine_gpu library
 # ------------------------------------------------------------------------------
 
-CUDA_ADD_LIBRARY(ChronoEngine_gpu SHARED
+CUDA_ADD_LIBRARY(ChronoEngine_gpu
                  ${ChronoEngine_GPU_BASE}
                  ${ChronoEngine_GPU_PHYSICS}
                  ${ChronoEngine_GPU_CUDA}
