@@ -4,7 +4,7 @@
 # Cannot be used stand-alone (it's loaded by CMake config. file in parent dir.)
 #=============================================================================
 
-option(ENABLE_MODULE_POSTPROCESS "Enable the Chrono Postprocess module" OFF)
+option(ENABLE_MODULE_POSTPROCESS "Enable the Chrono Postprocess module" ON)
 
 # Return now if this module is not enabled
 IF(NOT ENABLE_MODULE_POSTPROCESS)
@@ -37,7 +37,7 @@ SOURCE_GROUP("" FILES
 # The POSTPROCESS library is added to the project,
 # and some custom properties of this target are set.
 
-ADD_LIBRARY(ChronoEngine_postprocess SHARED 
+ADD_LIBRARY(ChronoEngine_postprocess 
 			${ChronoEngine_POSTPROCESS_SOURCES}
 			${ChronoEngine_POSTPROCESS_HEADERS})
 

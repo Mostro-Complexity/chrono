@@ -70,7 +70,7 @@ source_group("" FILES ${ChronoEngine_PARDISOPROJECT_HEADERS} ${ChronoEngine_PARD
 # Add the ChronoEngine_pardisoproject library
 # ------------------------------------------------------------------------------
 
-add_library(ChronoEngine_pardisoproject SHARED
+add_library(ChronoEngine_pardisoproject 
             ${ChronoEngine_PARDISOPROJECT_SOURCES}
             ${ChronoEngine_PARDISOPROJECT_HEADERS})
 

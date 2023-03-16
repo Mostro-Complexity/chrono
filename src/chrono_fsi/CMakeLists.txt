@@ -175,7 +175,7 @@ source_group(utils FILES ${ChronoEngine_FSI_UTILS_FILES})
 
 set(CXX_FLAGS ${CH_CXX_FLAGS})
 
-cuda_add_library(ChronoEngine_fsi SHARED
+cuda_add_library(ChronoEngine_fsi
     ${ChronoEngine_FSI_FILES}
     ${ChronoEngine_FSI_PHYSICS_FILES}
     ${ChronoEngine_FSI_MATH_FILES}

@@ -80,7 +80,7 @@ endif()
 
 #-----------------------------------------------------------------------------
 
-add_library(ChronoModels_robot SHARED 
+add_library(ChronoModels_robot 
             ${CRM_COMMON_FILES}
             ${CRM_ROBOSIMIAN_FILES}
             ${CRM_CURIOSITY_FILES}

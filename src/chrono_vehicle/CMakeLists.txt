@@ -4,7 +4,7 @@
 # Cannot be used stand-alone (it is loaded by parent CMake configuration file)
 #=============================================================================
 
-option(ENABLE_MODULE_VEHICLE "Enable the Chrono Vehicle module" OFF)
+option(ENABLE_MODULE_VEHICLE "Enable the Chrono Vehicle module" ON)
 
 # Return now if this module is not enabled
 if(NOT ENABLE_MODULE_VEHICLE)
@@ -802,7 +802,7 @@ if(HAVE_OPENCRG)
     list(APPEND LIBRARIES ${OPENCRG_LIBRARY})
 endif()
 
-add_library(ChronoEngine_vehicle SHARED
+add_library(ChronoEngine_vehicle 
 #
     ${CV_BASE_FILES}
     ${CV_CHASSIS_FILES}
@@ -874,7 +874,7 @@ list(APPEND LIBRARIES ChronoEngine_vehicle)
 list(APPEND LIBRARIES ChronoEngine_irrlicht) 
 include_directories(${CH_IRRLICHTINC})
 
-add_library(ChronoEngine_vehicle_irrlicht SHARED
+add_library(ChronoEngine_vehicle_irrlicht 
     ${CVIRR_DRIVER_FILES}
     ${CVIRR_UTILS_FILES}
     ${CVIRR_WV_TEST_RIG_FILES}

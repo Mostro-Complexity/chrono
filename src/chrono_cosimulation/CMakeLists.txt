@@ -4,7 +4,7 @@
 # Cannot be used stand-alone (it's loaded by CMake config. file in parent dir.)
 #=============================================================================
 
-option(ENABLE_MODULE_COSIMULATION "Enable the Chrono Cosimulation module" OFF)
+option(ENABLE_MODULE_COSIMULATION "Enable the Chrono Cosimulation module" ON)
 
 # Return now if this module is not enabled
 if(NOT ENABLE_MODULE_COSIMULATION)
@@ -30,7 +30,7 @@ source_group("" FILES
 
 # Add the COSIMULATION library
 
-add_library(ChronoEngine_cosimulation SHARED
+add_library(ChronoEngine_cosimulation
             ${ChronoEngine_COSIMULATION_SOURCES}
             ${ChronoEngine_COSIMULATION_HEADERS})
 

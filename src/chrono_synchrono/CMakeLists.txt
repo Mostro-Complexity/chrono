@@ -4,7 +4,7 @@
 # Cannot be used stand-alone (it is loaded by parent CMake configuration file)
 #=============================================================================
 
-option(ENABLE_MODULE_SYNCHRONO "Enable the SynChrono module" OFF)
+option(ENABLE_MODULE_SYNCHRONO "Enable the SynChrono module" ON)
 
 IF(NOT ENABLE_MODULE_SYNCHRONO)
   return()
@@ -26,9 +26,11 @@ if(NOT ENABLE_MODULE_VEHICLE)
     return()
 endif()
 
+find_package(Flatbuffers CONFIG REQUIRED)
+
 set(SYN_CXX_FLAGS "${CH_CXX_FLAGS}")
 set(SYN_LINKER_FLAGS "${CH_LINKERFLAG_SHARED}")
-set(SYN_LIBRARIES "")
+set(SYN_LIBRARIES flatbuffers::flatbuffers)
 set(SYN_LIB_NAMES "ChronoEngine")
 
 #-----------------------------------------------------------------------------
@@ -243,10 +245,9 @@ set(SYN_INCLUDES  "${SYN_INCLUDES}"  PARENT_SCOPE)
 set(SYN_LIBRARIES "${SYN_LIBRARIES}" PARENT_SCOPE)
 set(SYN_CXX_FLAGS "${SYN_CXX_FLAGS}" PARENT_SCOPE)
 
-include_directories("${CMAKE_SOURCE_DIR}/src/chrono_thirdparty/flatbuffers/include")
 include_directories(${SYN_INCLUDES})
 
-add_library(ChronoEngine_synchrono SHARED
+add_library(ChronoEngine_synchrono 
 	${SYN_BASE_FILES}
 	${SYN_CONTROLLER_FILES}
     ${SYN_AGENT_FILES}
@@ -266,7 +267,6 @@ set_target_properties(ChronoEngine_synchrono PROPERTIES
 
 target_compile_definitions(ChronoEngine_synchrono PRIVATE "SYN_API_COMPILE")
 
-target_include_directories(ChronoEngine_synchrono PUBLIC "${CMAKE_SOURCE_DIR}/src/chrono_thirdparty/flatbuffers/include")
 target_include_directories(ChronoEngine_synchrono PUBLIC ${SYN_INCLUDES})
 
 target_link_libraries(ChronoEngine_synchrono ${SYN_LIB_NAMES} ${SYN_LIBRARIES})

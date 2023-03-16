@@ -8,8 +8,9 @@
 # Optionally enable building the various programs
 #-----------------------------------------------------------------------------
 
-option(BUILD_DEMOS "Build demo programs" ON)
+option(BUILD_DEMOS "Build demo programs" OFF)
 option(BUILD_BENCHMARKING "Build benchmark tests" OFF)
+option(BUILD_SHARED_LIBS "Build shared libs" ON)
 
 #-----------------------------------------------------------------------------
 # Search prefixes specified by <PackageName>_ROOT
@@ -250,7 +251,7 @@ endif()
 #-----------------------------------------------------------------------------
 
 message(STATUS "Searching for Eigen3...")
-find_package(Eigen3 3.3.0)
+find_package(Eigen3 3.4.0)
 if(EIGEN3_FOUND)
   message(STATUS "  Eigen3 version: ${EIGEN3_VERSION}")
   message(STATUS "  Eigen3 include directory: ${EIGEN3_INCLUDE_DIR}")
@@ -277,16 +278,17 @@ endif()
 # Fix for hang-up in compilation with 32 bit on MSVC in Release configuration with EIGEN3.
 # Note: this flag may DECREASE the overall calculation performance in approx. 10%
 # For more information, see: https://gitlab.com/libeigen/eigen/-/issues/2379
-option(CMAKE_FLAGS_EIGEN3_INLINE "Build with 32 bit on MSVC in release configuration" OFF)
+set(CMAKE_FLAGS_EIGEN3_INLINE CACHE BOOL "Build with 32 bit on MSVC in release configuration" $<AND:$<CONFIG:Release>,$<PLATFORM_ID:x86>>)
 mark_as_advanced(FORCE CMAKE_FLAGS_EIGEN3_INLINE)
+message(STATUS "  Configuration system name is ${CMAKE_SYSTEM_NAME}")
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-	if(MSVC AND ("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32") AND CMAKE_FLAGS_EIGEN3_INLINE)
-     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /DEIGEN_STRONG_INLINE=inline")
-     set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /DEIGEN_STRONG_INLINE=inline")
-	 message(STATUS "Enabling inline flag for EIGEN hang-up issues with 32 bit on MSVC in release configuration")
-	 message(STATUS " Compiler flag: -DEIGEN_STRONG_INLINE=inline")
-	 message(STATUS " Note: this flag may DECREASE the overall calculation performance in approx. 10%")
-	endif()
+	if(MSVC AND CMAKE_FLAGS_EIGEN3_INLINE)
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /DEIGEN_STRONG_INLINE=inline")
+    set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /DEIGEN_STRONG_INLINE=inline")
+    message(STATUS "Enabling inline flag for EIGEN hang-up issues with 32 bit on MSVC in release configuration")
+    message(STATUS " Compiler flag: -DEIGEN_STRONG_INLINE=inline")
+    message(STATUS " Note: this flag may DECREASE the overall calculation performance in approx. 10%")
+  endif()
 endif()
 #-----------------------------------------------------------------------------
 # MPI support
@@ -489,7 +491,7 @@ endif()
 # HDF5 support (optional)
 #-----------------------------------------------------------------------------
 
-option(ENABLE_HDF5 "Enable HDF5 support" OFF)
+option(ENABLE_HDF5 "Enable HDF5 support" ON)
 
 if(ENABLE_HDF5)
 
@@ -723,10 +725,6 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/chrono_thirdparty/tinyobjloader
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/chrono_thirdparty/yafel
         DESTINATION include/chrono_thirdparty
         FILES_MATCHING PATTERN "*.h" PATTERN "*.cuh" PATTERN "*.hpp" PATTERN "*.inl")
-
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/chrono_thirdparty/chpf
-	      DESTINATION include/chrono_thirdparty
-	      FILES_MATCHING PATTERN "*.hpp")
         
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/chrono_thirdparty/stb
         DESTINATION include/chrono_thirdparty
@@ -928,19 +926,25 @@ install(FILES "${PROJECT_BINARY_DIR}/chrono/ChVersion.h"
 
 # For the BUILD tree
 set(CH_THIRDPARTY_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/src/chrono_thirdparty")
-set(CH_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/src")
-set(CH_INCLUDE_DIRS ${CH_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/src/chrono")
-set(CH_INCLUDE_DIRS ${CH_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/src/chrono/collision/bullet")
-set(CH_INCLUDE_DIRS ${CH_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/src/chrono/collision/gimpact")
-set(CH_INCLUDE_DIRS ${CH_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/src/chrono_thirdparty/HACD")
-set(CH_INCLUDE_DIRS ${CH_INCLUDE_DIRS} "${PROJECT_SOURCE_DIR}/src/chrono_thirdparty/HACDv2")
-set(CH_INCLUDE_DIRS ${CH_INCLUDE_DIRS} "${PROJECT_BINARY_DIR}")
-set(CH_INCLUDE_DIRS ${CH_INCLUDE_DIRS} "${EIGEN3_INCLUDE_DIR}")
-set(CH_INCLUDE_DIRS ${CH_INCLUDE_DIRS} "${OPENMP_INCLUDE_DIR}")
-set(CH_INCLUDE_DIRS ${CH_INCLUDE_DIRS} "${THRUST_INCLUDE_DIR}")
+list(APPEND CH_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/src")
+list(APPEND CH_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/src/chrono")
+list(APPEND CH_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/src/chrono/collision/bullet")
+list(APPEND CH_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/src/chrono/collision/gimpact")
+list(APPEND CH_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/src/chrono_thirdparty/HACD")
+list(APPEND CH_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/src/chrono_thirdparty/HACDv2")
+list(APPEND CH_INCLUDE_DIRS "${PROJECT_BINARY_DIR}")
+list(APPEND CH_INCLUDE_DIRS "${EIGEN3_INCLUDE_DIR}")
+list(APPEND CH_INCLUDE_DIRS "${OPENMP_INCLUDE_DIR}")
+list(APPEND CH_INCLUDE_DIRS "${THRUST_INCLUDE_DIR}")
+foreach(CH_INCLUDE_DIR ${CH_INCLUDE_DIRS})
+  file(RELATIVE_PATH CH_INCLUDE_RELATIVE_DIR ${PROJECT_SOURCE_DIR} ${CH_INCLUDE_DIR})
+  set(CH_INCLUDE_RELATIVE_DIRS ${CH_INCLUDE_RELATIVE_DIRS} ${CH_INCLUDE_RELATIVE_DIR})
+endforeach()
 
 set(CH_BINARY_DIR "${PROJECT_BINARY_DIR}")
+file(RELATIVE_PATH CH_BINARY_RELATIVE_DIR ${PROJECT_SOURCE_DIR} ${CH_BINARY_DIR})
 set(CH_DATA_DIR "${PROJECT_SOURCE_DIR}/data/")
+file(RELATIVE_PATH CH_DATA_RELATIVE_DIR ${PROJECT_SOURCE_DIR} ${CH_DATA_DIR})
 
 configure_file("${PROJECT_SOURCE_DIR}/cmake/ChronoConfig.cmake.in"
                "${PROJECT_BINARY_DIR}/cmake/ChronoConfig.cmake"
@@ -948,18 +952,24 @@ configure_file("${PROJECT_SOURCE_DIR}/cmake/ChronoConfig.cmake.in"
 
 # For the INSTALL tree
 set(CH_THIRDPARTY_INCLUDE_DIR "${CMAKE_INSTALL_PREFIX}/include/chrono_thirdparty")
-set(CH_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include")
-set(CH_INCLUDE_DIRS ${CH_INCLUDE_DIRS} "${CMAKE_INSTALL_PREFIX}/include/chrono")
-set(CH_INCLUDE_DIRS ${CH_INCLUDE_DIRS} "${CMAKE_INSTALL_PREFIX}/include/chrono/collision/bullet")
-set(CH_INCLUDE_DIRS ${CH_INCLUDE_DIRS} "${CMAKE_INSTALL_PREFIX}/include/chrono/collision/gimpact")
-set(CH_INCLUDE_DIRS ${CH_INCLUDE_DIRS} "${CMAKE_INSTALL_PREFIX}/include/chrono_thirdparty/HACD")
-set(CH_INCLUDE_DIRS ${CH_INCLUDE_DIRS} "${CMAKE_INSTALL_PREFIX}/include/chrono_thirdparty/HACDv2")
-set(CH_INCLUDE_DIRS ${CH_INCLUDE_DIRS} "${EIGEN3_INCLUDE_DIR}")
-set(CH_INCLUDE_DIRS ${CH_INCLUDE_DIRS} "${OPENMP_INCLUDE_DIR}")
-set(CH_INCLUDE_DIRS ${CH_INCLUDE_DIRS} "${THRUST_INCLUDE_DIR}")
+list(APPEND CH_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include")
+list(APPEND CH_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include/chrono")
+list(APPEND CH_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include/chrono/collision/bullet")
+list(APPEND CH_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include/chrono/collision/gimpact")
+list(APPEND CH_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include/chrono_thirdparty/HACD")
+list(APPEND CH_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include/chrono_thirdparty/HACDv2")
+list(APPEND CH_INCLUDE_DIRS "${EIGEN3_INCLUDE_DIR}")
+list(APPEND CH_INCLUDE_DIRS "${OPENMP_INCLUDE_DIR}")
+list(APPEND CH_INCLUDE_DIRS "${THRUST_INCLUDE_DIR}")
+foreach(CH_INCLUDE_DIR ${CH_INCLUDE_DIRS})
+  file(RELATIVE_PATH CH_INCLUDE_RELATIVE_DIR ${PROJECT_SOURCE_DIR} ${CH_INCLUDE_DIR})
+  set(CH_INCLUDE_RELATIVE_DIRS ${CH_INCLUDE_RELATIVE_DIRS} ${CH_INCLUDE_RELATIVE_DIR})
+endforeach()
 
 set(CH_BINARY_DIR ${CMAKE_INSTALL_PREFIX})
+file(RELATIVE_PATH CH_BINARY_RELATIVE_DIR ${PROJECT_SOURCE_DIR} ${CH_BINARY_DIR})
 set(CH_DATA_DIR "${CMAKE_INSTALL_PREFIX}/${CH_INSTALL_DATA}/")
+file(RELATIVE_PATH CH_DATA_RELATIVE_DIR ${PROJECT_SOURCE_DIR} ${CH_DATA_DIR})
 
 configure_file("${PROJECT_SOURCE_DIR}/cmake/ChronoConfig.cmake.in"
                "${PROJECT_BINARY_DIR}/cmake/ChronoConfig.cmake.install"

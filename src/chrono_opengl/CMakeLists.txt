@@ -3,7 +3,7 @@
 # Cannot be used stand-alone (it is loaded by parent CMake configuration file)
 #=============================================================================
 
-option(ENABLE_MODULE_OPENGL "Enable the Chrono OpenGL module" OFF)
+option(ENABLE_MODULE_OPENGL "Enable the Chrono OpenGL module" ON)
 
 # Return now if this module is not enabled
 
@@ -42,9 +42,11 @@ endif()
 cmake_policy(SET CMP0072 NEW)
 
 find_package(OpenGL)
-find_package(GLM)
-find_package(GLEW)
-find_package(GLFW)
+find_package(glm CONFIG REQUIRED)
+find_package(GLEW REQUIRED)
+find_package(glfw3 CONFIG REQUIRED)
+
+set(GLFW_LIBRARY       glfw)
 
 # On windows, ask for the GLEW and GLFW DLLs so that we can copy. This is
 # optional.  If not specified, it is the user's responsibility to make them
@@ -52,19 +54,6 @@ find_package(GLFW)
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     SET(GLEW_DLL  "" CACHE FILEPATH "The GLEW DLL")
     SET(GLFW_DLL  "" CACHE FILEPATH "The GLFW DLL")
-ENDIF()
-
-# If all dependencies are available, enable building OpenGL support.
-IF(OPENGL_FOUND AND GLM_FOUND AND GLEW_FOUND AND GLFW_FOUND)
-    set(CHRONO_OPENGL "#define CHRONO_OPENGL")
-    message(STATUS "OpenGL libraries: ${OPENGL_LIBRARIES}")
-    message(STATUS "GLEW libraries:   ${GLEW_LIBRARY}")
-    message(STATUS "GLFW libraries:   ${GLFW_LIBRARY}")
-ELSE()
-    # Unable to find everything, turn off OpenGL
-    message("Cannot build ChronoEngine_OpenGL (missing dependencies); disabling Chrono::OpenGL")
-    set(CHRONO_OPENGL "#undef CHRONO_OPENGL")
-    set(ENABLE_MODULE_GPU OFF CACHE BOOL "Enable the Chrono::OpenGL module" FORCE)
 ENDIF()
 
 # ------------------------------------------------------------------------------
@@ -262,7 +251,7 @@ SOURCE_GROUP("utils" FILES ${CE_OpenGL_STB_FILES} ${CE_OpenGL_TINYOBJLOADER_FILE
 # Add the ChronoEngine_opengl library
 # ------------------------------------------------------------------------------
 
-ADD_LIBRARY(ChronoEngine_opengl SHARED 
+ADD_LIBRARY(ChronoEngine_opengl  
   ${CE_OpenGL_BASE_FILES}
   ${CE_OpenGL_CORE_FILES}
   ${CE_OpenGL_SHAPES_FILES}
