@@ -45,9 +45,30 @@ target_link_libraries(ChronoEngine_cosimulation ChronoEngine)
 add_dependencies(ChronoEngine_cosimulation ChronoEngine)
 
 install(TARGETS ChronoEngine_cosimulation
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib)
+    EXPORT Cosimulation
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+)
 
-install(FILES ${ChronoEngine_COSIMULATION_HEADERS}
-        DESTINATION include/chrono_cosimulation)
+export(EXPORT Cosimulation
+    NAMESPACE Chrono::
+    FILE ChronoCosimulationTargets.cmake
+)
+
+# install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ChronoCosimulationTargets.cmake
+#     DESTINATION cmake
+# )
+
+install(
+    EXPORT Cosimulation
+    FILE ChronoCosimulationConfig.cmake
+    NAMESPACE Chrono::
+    DESTINATION cmake
+)
+
+# Install all header files for the main ChronoEngine_cosimulation library
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    DESTINATION include/chrono_cosimulation
+    FILES_MATCHING REGEX ".*\\.(h|inl)$"
+)

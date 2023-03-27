@@ -9,11 +9,6 @@ option(ENABLE_MODULE_OPENGL "Enable the Chrono OpenGL module" ON)
 
 if(NOT ENABLE_MODULE_OPENGL)
   # Hide Chrono::OpenGL specific variables
-  mark_as_advanced(FORCE GLEW_INCLUDE_DIR)
-  mark_as_advanced(FORCE GLEW_LIBRARY)
-  mark_as_advanced(FORCE GLFW_INCLUDE_DIR)
-  mark_as_advanced(FORCE GLFW_LIBRARY)
-  mark_as_advanced(FORCE GLM_INCLUDE_DIR)
   if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     mark_as_advanced(FORCE GLEW_DLL)
     mark_as_advanced(FORCE GLFW_DLL)
@@ -25,11 +20,6 @@ endif()
 message(STATUS "\n==== Chrono OpenGL module ====\n")
 
 # Show Chrono::OpenGL specific variables
-mark_as_advanced(CLEAR GLEW_INCLUDE_DIR)
-mark_as_advanced(CLEAR GLEW_LIBRARY)
-mark_as_advanced(CLEAR GLFW_INCLUDE_DIR)
-mark_as_advanced(CLEAR GLFW_LIBRARY)
-mark_as_advanced(CLEAR GLM_INCLUDE_DIR)
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   mark_as_advanced(CLEAR GLEW_DLL)
   mark_as_advanced(CLEAR GLFW_DLL)
@@ -41,7 +31,7 @@ endif()
 
 cmake_policy(SET CMP0072 NEW)
 
-find_package(OpenGL)
+find_package(OpenGL REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
@@ -60,26 +50,9 @@ ENDIF()
 # Collect all include directories necessary for the OpenGL module
 # ------------------------------------------------------------------------------
 
-SET(CH_OPENGL_INCLUDES
-    ${GLM_INCLUDE_DIRS}
-    ${GLEW_INCLUDE_DIR}
-    ${GLFW_INCLUDE_DIR}
-)
-
-INCLUDE_DIRECTORIES(${CH_OPENGL_INCLUDES})
-
 IF(ENABLE_MODULE_MULTICORE)
     INCLUDE_DIRECTORIES(${CH_MULTICORE_INCLUDES})
 ENDIF()
-
-# ------------------------------------------------------------------------------
-# Make some variables visible from parent directory
-# ------------------------------------------------------------------------------
-
-SET(CH_OPENGL_INCLUDES "${CH_OPENGL_INCLUDES}" PARENT_SCOPE)
-SET(GLEW_LIBRARY       "${GLEW_LIBRARY}" PARENT_SCOPE)
-SET(GLFW_LIBRARY       "${GLFW_LIBRARY}" PARENT_SCOPE)
-SET(OPENGL_LIBRARIES   "${OPENGL_LIBRARIES}" PARENT_SCOPE)
 
 # ------------------------------------------------------------------------------
 # Add commands to compile shaders
@@ -265,15 +238,10 @@ SET(CE_OpenGL_FLAGS "${CH_CXX_FLAGS}")
 
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
   SET(CE_OpenGL_LIBRARIES 
-    # ${OPENGL_LIBRARIES}
     ChronoEngine)
   set (CE_OpenGL_LINK_FLAGS "-s FULL_ES3=1 -s USE_GLFW=3")
 ELSE()
-  SET(CE_OpenGL_LIBRARIES 
-    ${GLEW_LIBRARY}
-    ${GLFW_LIBRARY}
-    ${OPENGL_LIBRARIES}
-    ChronoEngine)
+  SET(CE_OpenGL_LIBRARIES OpenGL::GL glm::glm GLEW::GLEW glfw ChronoEngine)
 ENDIF()
 
 if(ENABLE_MODULE_MULTICORE)
@@ -290,12 +258,29 @@ target_compile_definitions(ChronoEngine_opengl PRIVATE "CH_API_COMPILE_OPENGL")
 target_compile_definitions(ChronoEngine_opengl PRIVATE "GLM_ENABLE_EXPERIMENTAL")
 target_compile_definitions(ChronoEngine_opengl PRIVATE "CH_IGNORE_DEPRECATED")
 
-TARGET_LINK_LIBRARIES(ChronoEngine_opengl ${CE_OpenGL_LIBRARIES})
+TARGET_LINK_LIBRARIES(ChronoEngine_opengl ${CE_OpenGL_LIBRARIES}) 
 
 INSTALL(TARGETS ChronoEngine_opengl
+  EXPORT OpenGL
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib)
+
+export(EXPORT OpenGL
+  NAMESPACE Chrono::
+  FILE ChronoOpenGLTargets.cmake
+)
+
+# install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ChronoOpenGLTargets.cmake
+#     DESTINATION cmake
+# )
+
+install(
+    EXPORT OpenGL
+    FILE ChronoOpenGLConfig.cmake
+    NAMESPACE Chrono::
+    DESTINATION cmake
+)
 
 INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
     DESTINATION include/chrono_opengl

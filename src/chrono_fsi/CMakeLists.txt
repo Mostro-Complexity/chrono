@@ -192,10 +192,28 @@ target_compile_definitions(ChronoEngine_fsi PRIVATE "CH_IGNORE_DEPRECATED")
 target_link_libraries(ChronoEngine_fsi ${CH_FSI_LINKED_LIBRARIES})
 
 install(TARGETS ChronoEngine_fsi
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib)
+  EXPORT FSI
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+)
 
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
+export(EXPORT FSI
+    NAMESPACE Chrono::
+    FILE ChronoFSITargets.cmake
+)
+
+# install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ChronoFSITargets.cmake
+#     DESTINATION cmake
+# )
+
+install(
+    EXPORT FSI
+    FILE ChronoFSIConfig.cmake
+    NAMESPACE Chrono::
+    DESTINATION cmake
+)
+
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         DESTINATION include/chrono_fsi
         FILES_MATCHING PATTERN "*.h" PATTERN "*.cuh")

@@ -946,9 +946,18 @@ file(RELATIVE_PATH CH_BINARY_RELATIVE_DIR ${PROJECT_SOURCE_DIR} ${CH_BINARY_DIR}
 set(CH_DATA_DIR "${PROJECT_SOURCE_DIR}/data/")
 file(RELATIVE_PATH CH_DATA_RELATIVE_DIR ${PROJECT_SOURCE_DIR} ${CH_DATA_DIR})
 
-configure_file("${PROJECT_SOURCE_DIR}/cmake/ChronoConfig.cmake.in"
-               "${PROJECT_BINARY_DIR}/cmake/ChronoConfig.cmake"
-               @ONLY)
+# configure_file("${PROJECT_SOURCE_DIR}/cmake/ChronoConfig.cmake.in"
+#                "${PROJECT_BINARY_DIR}/cmake/ChronoConfig.cmake"
+#                @ONLY)
+
+# install(FILES ${PROJECT_BINARY_DIR}/cmake/ChronoConfig.cmake DESTINATION cmake)
+include(CMakePackageConfigHelpers)
+configure_package_config_file(${PROJECT_SOURCE_DIR}/cmake/ChronoConfig.cmake.in
+  ${PROJECT_BINARY_DIR}/cmake/ChronoConfig.cmake
+  INSTALL_DESTINATION cmake
+)
+install(FILES ${PROJECT_BINARY_DIR}/cmake/ChronoConfig.cmake DESTINATION cmake)
+
 
 # For the INSTALL tree
 set(CH_THIRDPARTY_INCLUDE_DIR "${CMAKE_INSTALL_PREFIX}/include/chrono_thirdparty")
@@ -971,16 +980,8 @@ file(RELATIVE_PATH CH_BINARY_RELATIVE_DIR ${PROJECT_SOURCE_DIR} ${CH_BINARY_DIR}
 set(CH_DATA_DIR "${CMAKE_INSTALL_PREFIX}/${CH_INSTALL_DATA}/")
 file(RELATIVE_PATH CH_DATA_RELATIVE_DIR ${PROJECT_SOURCE_DIR} ${CH_DATA_DIR})
 
-configure_file("${PROJECT_SOURCE_DIR}/cmake/ChronoConfig.cmake.in"
-               "${PROJECT_BINARY_DIR}/cmake/ChronoConfig.cmake.install"
-               @ONLY)
-
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     set(CH_CONFIG_INSTALL_PATH "cmake")
 else()
     set(CH_CONFIG_INSTALL_PATH "lib/cmake/Chrono")
 endif()
-
-install(FILES "${PROJECT_BINARY_DIR}/cmake/ChronoConfig.cmake.install"
-        DESTINATION ${CH_CONFIG_INSTALL_PATH}
-        RENAME ChronoConfig.cmake)

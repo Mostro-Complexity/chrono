@@ -272,9 +272,27 @@ target_include_directories(ChronoEngine_synchrono PUBLIC ${SYN_INCLUDES})
 target_link_libraries(ChronoEngine_synchrono ${SYN_LIB_NAMES} ${SYN_LIBRARIES})
 
 install(TARGETS ChronoEngine_synchrono
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib)
+    EXPORT Synchrono
+	RUNTIME DESTINATION bin
+	LIBRARY DESTINATION lib
+	ARCHIVE DESTINATION lib
+)
+
+export(EXPORT Synchrono
+    NAMESPACE Chrono::
+    FILE ChronoSynchronoTargets.cmake
+)
+
+# install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ChronoSynchronoTargets.cmake
+#     DESTINATION cmake
+# )
+
+install(
+    EXPORT Synchrono
+    FILE ChronoSynchronoConfig.cmake
+    NAMESPACE Chrono::
+    DESTINATION cmake
+)
 
 #-------------------------------------------------------------------------------
 # Install SynChrono headers

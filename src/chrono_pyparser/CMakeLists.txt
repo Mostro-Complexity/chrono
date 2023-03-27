@@ -90,8 +90,26 @@ target_link_libraries(ChronoEngine_pyparser ${CH_PYTHONLIB} ChronoEngine)
 ADD_DEPENDENCIES(ChronoEngine_pyparser ChronoEngine)
 
 install(TARGETS ChronoEngine_pyparser
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib)
+  EXPORT Pyparser
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+)
+
+export(EXPORT Pyparser
+  NAMESPACE Chrono::
+  FILE ChronoPyparserTargets.cmake
+)
+
+# install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ChronoPyparserTargets.cmake
+#     DESTINATION cmake
+# )
+
+install(
+  EXPORT Pyparser
+  FILE ChronoPyparserConfig.cmake
+  NAMESPACE Chrono::
+  DESTINATION cmake
+)
 
 INSTALL(FILES ${ChronoEngine_PYPARSER_HEADERS} DESTINATION include/chrono_pyparser)

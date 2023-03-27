@@ -108,3 +108,4 @@ third_party
 out
 
 vcpkg_binary_source
+install

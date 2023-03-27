@@ -558,9 +558,27 @@ ENDIF()
 # Install the ChronoEngine_sensor library
 
 install(TARGETS ChronoEngine_sensor
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib)
+  EXPORT Sensor
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+)
+
+export(EXPORT Sensor
+    NAMESPACE Chrono::
+    FILE ChronoSensorTargets.cmake
+)
+
+# install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ChronoSensorTargets.cmake
+#     DESTINATION cmake
+# )
+
+install(
+    EXPORT Sensor
+    FILE ChronoSensorConfig.cmake
+    NAMESPACE Chrono::
+    DESTINATION cmake
+)
 
 install(FILES ${ChronoEngine_sensor_HEADERS}
 		DESTINATION include/chrono_sensor)

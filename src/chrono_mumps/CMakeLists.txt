@@ -187,9 +187,27 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 endif()
 
 install(TARGETS ChronoEngine_mumps
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib)
+    EXPORT Mumps
+	RUNTIME DESTINATION bin
+	LIBRARY DESTINATION lib
+	ARCHIVE DESTINATION lib
+)
+
+export(EXPORT Mumps
+    NAMESPACE Chrono::
+    FILE ChronoMumpsTargets.cmake
+)
+
+# install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ChronoMumpsTargets.cmake
+#     DESTINATION cmake
+# )
+
+install(
+    EXPORT Mumps
+    FILE ChronoMumpsConfig.cmake
+    NAMESPACE Chrono::
+    DESTINATION cmake
+)
 
 install(FILES ${ChronoEngine_MUMPS_HEADERS} 
         DESTINATION include/chrono_mumps)

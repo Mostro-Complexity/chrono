@@ -54,11 +54,29 @@ TARGET_LINK_LIBRARIES(ChronoEngine_postprocess
 ADD_DEPENDENCIES(ChronoEngine_postprocess ChronoEngine)
 	
 INSTALL(TARGETS ChronoEngine_postprocess
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib)		
+    EXPORT Postprocess
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+)		
 
-INSTALL(FILES ${ChronoEngine_POSTPROCESS_HEADERS}
-        DESTINATION include/chrono_postprocess)
+export(EXPORT Postprocess
+    NAMESPACE Chrono::
+    FILE ChronoPostprocessTargets.cmake
+)
 
+# install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ChronoPostprocessTargets.cmake
+#     DESTINATION cmake
+# )
 
+install(
+    EXPORT Postprocess
+    FILE ChronoPostprocessConfig.cmake
+    NAMESPACE Chrono::
+    DESTINATION cmake
+)
+
+# Install all header files for the main ChronoEngine library
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    DESTINATION include/chrono_postprocess
+    FILES_MATCHING REGEX ".*\\.(h|inl)$")

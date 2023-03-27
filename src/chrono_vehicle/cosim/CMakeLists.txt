@@ -180,6 +180,24 @@ target_compile_definitions(ChronoEngine_vehicle_cosim PRIVATE "CH_IGNORE_DEPRECA
 target_link_libraries(ChronoEngine_vehicle_cosim ${LIBRARIES})
 
 install(TARGETS ChronoEngine_vehicle_cosim
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib)
+  EXPORT VehicleCosim
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+)
+
+export(EXPORT VehicleCosim
+  NAMESPACE Chrono::
+  FILE ChronoVehicleCosimTargets.cmake
+)
+
+# install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ChronoVehicleCosimTargets.cmake
+#     DESTINATION cmake
+# )
+
+install(
+    EXPORT VehicleCosim
+    FILE ChronoVehicleCosimConfig.cmake
+    NAMESPACE Chrono::
+    DESTINATION cmake
+)

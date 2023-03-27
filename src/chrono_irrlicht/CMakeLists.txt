@@ -162,9 +162,29 @@ ENDIF()
 # Install the ChronoEngine_irrlicht library
 
 INSTALL(TARGETS ChronoEngine_irrlicht
+  EXPORT Irrlicht
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
 )
 
-INSTALL(FILES ${ChronoEngine_IRRLICHT_HEADERS} DESTINATION include/chrono_irrlicht)
+export(EXPORT Irrlicht
+  NAMESPACE Chrono::
+  FILE ChronoIrrlichtTargets.cmake
+)
+
+# install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ChronoIrrlichtTargets.cmake
+#     DESTINATION cmake
+# )
+
+install(
+    EXPORT Irrlicht
+    FILE ChronoIrrlichtConfig.cmake
+    NAMESPACE Chrono::
+    DESTINATION cmake
+)
+
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+  DESTINATION include/chrono_irrlicht
+  FILES_MATCHING REGEX ".*\\.(h|inl)$"
+)

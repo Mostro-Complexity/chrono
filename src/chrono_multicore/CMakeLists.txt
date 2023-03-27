@@ -9,7 +9,7 @@
 # If TBB is defined, thrust will use TBB but the rest of the code will be single
 # threaded
 
-option(ENABLE_MODULE_MULTICORE "Enable the Chrono::Multicore module" ON)
+option(ENABLE_MODULE_MULTICORE "Enable the Chrono::Multicore module" OFF)
 
 # Return now if this module is not enabled
 

@@ -657,9 +657,27 @@ target_compile_definitions(ChronoModels_vehicle PRIVATE "CH_IGNORE_DEPRECATED")
 target_link_libraries(ChronoModels_vehicle ${LIBRARIES})
 
 install(TARGETS ChronoModels_vehicle
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib)
+    EXPORT ModelVehicle
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+)
+
+export(EXPORT ModelVehicle
+    NAMESPACE Chrono::
+    FILE ChronoModelVehicleTargets.cmake
+)
+
+# install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ChronoModelVehicleTargets.cmake
+#     DESTINATION cmake
+# )
+
+install(
+    EXPORT ModelVehicle
+    FILE ChronoModelVehicleConfig.cmake
+    NAMESPACE Chrono::
+    DESTINATION cmake
+)
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
         DESTINATION include/chrono_models/vehicle

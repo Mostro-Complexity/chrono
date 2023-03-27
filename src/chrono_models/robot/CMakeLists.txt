@@ -99,9 +99,27 @@ target_compile_definitions(ChronoModels_robot PRIVATE "CH_IGNORE_DEPRECATED")
 target_link_libraries(ChronoModels_robot ${LIBRARIES})
 
 install(TARGETS ChronoModels_robot
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib)
+    EXPORT Robot
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+)
+
+export(EXPORT Robot
+    NAMESPACE Chrono::
+    FILE ChronoRobotTargets.cmake
+)
+
+# install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ChronoRobotTargets.cmake
+#     DESTINATION cmake
+# )
+
+install(
+    EXPORT Robot
+    FILE ChronoRobotConfig.cmake
+    NAMESPACE Chrono::
+    DESTINATION cmake
+)
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
         DESTINATION include/chrono_models/robot

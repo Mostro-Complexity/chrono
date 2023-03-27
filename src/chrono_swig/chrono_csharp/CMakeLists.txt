@@ -108,12 +108,32 @@ target_compile_definitions(${SWIG_MODULE_${MODULE_CORE}_REAL_NAME} PRIVATE "CH_I
 ADD_DEPENDENCIES(${SWIG_MODULE_${MODULE_CORE}_REAL_NAME} ChronoEngine)
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-    install(TARGETS ChronoEngine_csharp_core
-            LIBRARY DESTINATION bin)
+  install(TARGETS ChronoEngine_csharp_core
+    EXPORT CSharp
+    LIBRARY DESTINATION bin
+  )
 else()
-    install(TARGETS ChronoEngine_csharp_core
-            LIBRARY DESTINATION lib)
+  install(TARGETS ChronoEngine_csharp_core
+    EXPORT CSharp
+    LIBRARY DESTINATION lib
+  )
 endif()
+
+export(EXPORT CSharp
+  NAMESPACE Chrono::
+  FILE ChronoCSharpTargets.cmake
+)
+
+# install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ChronoCSharpTargets.cmake
+#     DESTINATION cmake
+# )
+
+install(
+    EXPORT CSharp
+    FILE ChronoCSharpConfig.cmake
+    NAMESPACE Chrono::
+    DESTINATION cmake
+)
 
 message(STATUS "Module name:     ${MODULE_CORE}")
 message(STATUS "SWIG_REAL_NAME:  ${SWIG_MODULE_${MODULE_CORE}_REAL_NAME}")

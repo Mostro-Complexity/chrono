@@ -119,10 +119,25 @@ target_link_libraries(ChronoEngine_cascade
         ${LIBRARIES})
 
 install(TARGETS ChronoEngine_cascade
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib)
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+)
 
-install(FILES ${ChronoEngine_CASCADE_HEADERS} ${ChronoEngine_CASCADE_HEADERS_IRRLICHT}
-        DESTINATION include/chrono_cascade)
+export(EXPORT Cascade
+    NAMESPACE Chrono::
+    FILE ChronoCascadeTargets.cmake
+)
 
+install(
+    EXPORT Cascade
+    FILE ChronoCascadeConfig.cmake
+    NAMESPACE Chrono::
+    DESTINATION cmake
+)
+
+# Install all header files for the main ChronoEngine_cascade library
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    DESTINATION include/chrono_cascade
+    FILES_MATCHING REGEX ".*\\.(h|inl)$"
+)

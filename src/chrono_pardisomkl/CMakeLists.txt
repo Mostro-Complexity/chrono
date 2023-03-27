@@ -103,9 +103,27 @@ target_link_libraries(ChronoEngine_pardisomkl
                       )
 
 install(TARGETS ChronoEngine_pardisomkl
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib)
+  EXPORT PardisoMKL
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+)
+
+export(EXPORT PardisoMKL
+    NAMESPACE Chrono::
+    FILE ChronoPardisoMKLTargets.cmake
+)
+
+# install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ChronoPardisoMKLTargets.cmake
+#     DESTINATION cmake
+# )
+
+install(
+  EXPORT PardisoMKL
+  FILE ChronoPardisoMKLConfig.cmake
+  NAMESPACE Chrono::
+  DESTINATION cmake
+)
 
 install(FILES ${ChronoEngine_PardisoMKL_HEADERS}
         DESTINATION include/chrono_pardisomkl)

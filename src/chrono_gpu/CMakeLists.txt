@@ -168,9 +168,27 @@ target_link_libraries(ChronoEngine_gpu ${CH_GPU_LINKED_LIBRARIES})
 target_include_directories(ChronoEngine_gpu PUBLIC "${CUB_INCLUDE_DIR}/../")
 
 install(TARGETS ChronoEngine_gpu
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib)
+    EXPORT GPU
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+)
+
+export(EXPORT GPU
+    NAMESPACE Chrono::
+    FILE ChronoGPUTargets.cmake
+)
+
+# install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ChronoGPUTargets.cmake
+#     DESTINATION cmake
+# )
+
+install(
+    EXPORT GPU
+    FILE ChronoGPUConfig.cmake
+    NAMESPACE Chrono::
+    DESTINATION cmake
+)
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
         DESTINATION include/chrono_gpu

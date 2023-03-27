@@ -13,22 +13,6 @@ option(USE_BULLET_DOUBLE "Compile Chrono::Engine with double precision support i
 cmake_dependent_option(USE_BULLET_OPENMP "Compile Chrono::Engine with OpenMP support in Bullet" ON "ENABLE_OPENMP" OFF)
 
 #-----------------------------------------------------------------------------
-# Includes for the main library
-#-----------------------------------------------------------------------------
-
-set(CH_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}")
-set(CH_INCLUDES ${CH_INCLUDES} "${CMAKE_CURRENT_SOURCE_DIR}/collision/bullet" )
-set(CH_INCLUDES ${CH_INCLUDES} "${CMAKE_CURRENT_SOURCE_DIR}/collision/gimpact" )
-set(CH_INCLUDES ${CH_INCLUDES} "${CMAKE_CURRENT_SOURCE_DIR}/../chrono_thirdparty/HACD" )
-set(CH_INCLUDES ${CH_INCLUDES} "${CMAKE_CURRENT_SOURCE_DIR}/../chrono_thirdparty/HACDv2" )
-
-# Make CH_INCLUDES visible in parent scope
-set(CH_INCLUDES "${CH_INCLUDES}" PARENT_SCOPE)
-
-message(STATUS "Chrono includes: ${CH_INCLUDES}")
-include_directories(${CH_INCLUDES})
-
-#-----------------------------------------------------------------------------
 # Collect files in the main ChronoEngine library
 #-----------------------------------------------------------------------------
 
@@ -1301,13 +1285,38 @@ source_group(utils FILES
 # TinyObj Group
 
 set(ChronoEngine_tiny_obj_FILES
-  ../chrono_thirdparty/tinyobjloader/tiny_obj_loader.cc
-  ../chrono_thirdparty/tinyobjloader/tiny_obj_loader.h
+    ../chrono_thirdparty/tinyobjloader/tiny_obj_loader.cc
+    ../chrono_thirdparty/tinyobjloader/tiny_obj_loader.h
 )
 
 source_group(utils\\tiny_obj FILES
     ${ChronoEngine_tiny_obj_FILES})
 
+set(ChronoEngine_HACD_SOURCES 
+    ../chrono_thirdparty/HACD/hacdGraph.cpp
+    ../chrono_thirdparty/HACD/hacdHACD.cpp
+    ../chrono_thirdparty/HACD/hacdICHull.cpp
+    ../chrono_thirdparty/HACD/hacdManifoldMesh.cpp
+    ../chrono_thirdparty/HACD/hacdMeshDecimator.cpp
+    ../chrono_thirdparty/HACD/hacdMicroAllocator.cpp
+    ../chrono_thirdparty/HACD/hacdRaycastMesh.cpp
+)
+
+set(ChronoEngine_HACD_HEADERS 
+    ../chrono_thirdparty/HACD/hacdCircularList.h
+    ../chrono_thirdparty/HACD/hacdCircularList.inl
+    ../chrono_thirdparty/HACD/hacdGraph.h
+    ../chrono_thirdparty/HACD/hacdHACD.h
+    ../chrono_thirdparty/HACD/hacdICHull.h
+    ../chrono_thirdparty/HACD/hacdManifoldMesh.h
+    ../chrono_thirdparty/HACD/hacdMeshDecimator.h
+    ../chrono_thirdparty/HACD/hacdMicroAllocator.h
+    ../chrono_thirdparty/HACD/hacdRaycastMesh.h
+    ../chrono_thirdparty/HACD/hacdSArray.h
+    ../chrono_thirdparty/HACD/hacdVector.h
+    ../chrono_thirdparty/HACD/hacdVector.inl
+    ../chrono_thirdparty/HACD/hacdVersion.h
+)
 # Collect all source and header files for the ChronoEngine library
 
 set(ChronoEngine_FILES
@@ -1360,7 +1369,9 @@ set(ChronoEngine_FILES
     ${ChronoEngine_utils_SOURCES}
     ${ChronoEngine_utils_HEADERS}
     ${ChronoEngine_tiny_obj_FILES}
-    )
+    ${ChronoEngine_HACD_SOURCES} 
+    ${ChronoEngine_HACD_HEADERS} 
+)
 
 # Add the 'socket' library to the linking, depending on platform.
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
@@ -1410,8 +1421,21 @@ if (UNIX)
   target_link_libraries(ChronoEngine pthread)
 endif()
 
-# Set some custom properties of this target
-set_target_properties(ChronoEngine PROPERTIES LINK_FLAGS "${CH_LINKERFLAG_SHARED}")
+target_include_directories(ChronoEngine 
+    PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../chrono_thirdparty/HACD>
+           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../chrono_thirdparty/HACDv2>
+           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/collision/bullet>
+           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/collision/gimpact>
+)
+
+target_include_directories(ChronoEngine 
+    PUBLIC $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/../chrono_thirdparty/HACD>
+           $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/../chrono_thirdparty/HACDv2>
+           $<INSTALL_INTERFACE:$<INSTALL_PREFIX>>
+           $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/collision/bullet>
+           $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/collision/gimpact>
+)
 
 target_compile_definitions(ChronoEngine PRIVATE "CH_API_COMPILE")
 target_compile_definitions(ChronoEngine PRIVATE "CH_IGNORE_DEPRECATED")
@@ -1435,11 +1459,30 @@ endif()
 
 # Install the main ChronoEngine library
 install(TARGETS ChronoEngine
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib)
+    EXPORT Core
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+export(EXPORT Core
+    NAMESPACE Chrono::
+    FILE ChronoCoreTargets.cmake
+)
+
+# install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ChronoCoreTargets.cmake
+#     DESTINATION cmake
+# )
+
+install(
+    EXPORT Core
+    FILE ChronoCoreConfig.cmake
+    NAMESPACE Chrono::
+    DESTINATION cmake
+)
 
 # Install all header files for the main ChronoEngine library
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     DESTINATION include/chrono
     FILES_MATCHING REGEX ".*\\.(h|inl)$")

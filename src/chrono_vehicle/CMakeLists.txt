@@ -858,10 +858,27 @@ endif()
 target_link_libraries(ChronoEngine_vehicle ${LIBRARIES})
 
 install(TARGETS ChronoEngine_vehicle
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib)
+    EXPORT Vehicle
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+)
 
+export(EXPORT Vehicle
+    NAMESPACE Chrono::
+    FILE ChronoVehicleTargets.cmake
+)
+
+# install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ChronoVehicleTargets.cmake
+#     DESTINATION cmake
+# )
+
+install(
+    EXPORT Vehicle
+    FILE ChronoVehicleConfig.cmake
+    NAMESPACE Chrono::
+    DESTINATION cmake
+)
 
 #-------------------------------------------------------------------------------
 # Add the ChronoEngine_vehicle_irrlicht library
@@ -900,9 +917,27 @@ target_compile_definitions(ChronoEngine_vehicle_irrlicht PRIVATE "CH_IGNORE_DEPR
 target_link_libraries(ChronoEngine_vehicle_irrlicht ${LIBRARIES})
 
 install(TARGETS ChronoEngine_vehicle_irrlicht
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib)
+    EXPORT VehicleIrrlicht
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+)
+
+export(EXPORT VehicleIrrlicht
+    NAMESPACE Chrono::
+    FILE ChronoVehicleIrrlichtTargets.cmake
+)
+
+# install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ChronoVehicleIrrlichtTargets.cmake
+#     DESTINATION cmake
+# )
+
+install(
+    EXPORT VehicleIrrlicht
+    FILE ChronoVehicleIrrlichtConfig.cmake
+    NAMESPACE Chrono::
+    DESTINATION cmake
+)
 
 endif()
 

@@ -143,11 +143,32 @@ TARGET_LINK_LIBRARIES(ChronoEngine_distributed
                       ChronoEngine_multicore
                       ${MPI_CXX_LIBRARIES})
 
+# Install the main ChronoEngine_distributed library
 INSTALL(TARGETS ChronoEngine_distributed
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib)
+    EXPORT Distributed
+	RUNTIME DESTINATION bin
+	LIBRARY DESTINATION lib
+	ARCHIVE DESTINATION lib
+)
 
-INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
-        DESTINATION include/chrono_distributed
-        FILES_MATCHING PATTERN "*.h")
+export(EXPORT Distributed
+    NAMESPACE Chrono::
+    FILE ChronoDistributedTargets.cmake
+)
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ChronoDistributedTargets.cmake
+    DESTINATION cmake
+)
+
+install(
+    EXPORT Distributed
+    FILE ChronoDistributedConfig.cmake
+    NAMESPACE Chrono::
+    DESTINATION cmake
+)
+
+# Install all header files for the main ChronoEngine_distributed library
+INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+	DESTINATION include/chrono_distributed
+	FILES_MATCHING PATTERN "*.h"
+)
